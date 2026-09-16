@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DropRadar – Preisvergleich & Rabatt-Radar für Mode</title>
+<meta name="description" content="Rabatte, Preise und neue Drops über Mode- und Print-on-Demand-Shops vergleichen, plus Trend-Magazin und Deal-Community.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#17171A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F1EFE6;
+    --paper-2:#E7E2D4;
+    --paper-3:#DED8C6;
+    --ink:#17171A;
+    --ink-soft:#565349;
+    --line:#D6D0BC;
+    --accent:#FF4B2E;
+    --accent-ink:#3A1006;
+    --accent-2:#1F6F68;
+    --accent-2-soft:#DCEAE6;
+    --shadow: 0 1px 0 var(--line);
+    --radius: 3px;
+    --font-display: 'Bricolage Grotesque', 'Arial Black', sans-serif;
+    --font-body: 'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif;
+    --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#161511;
+      --paper-2:#201E19;
+      --paper-3:#2B2822;
+      --ink:#F1EEE3;
+      --ink-soft:#B6AF9C;
+      --line:#38352C;
+      --accent:#FF6A4D;
+      --accent-ink:#FFE6DD;
+      --accent-2:#5BC2B6;
+      --accent-2-soft:#1D3733;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#161511;
+    --paper-2:#201E19;
+    --paper-3:#2B2822;
+    --ink:#F1EEE3;
+    --ink-soft:#B6AF9C;
+    --line:#38352C;
+    --accent:#FF6A4D;
+    --accent-ink:#FFE6DD;
+    --accent-2:#5BC2B6;
+    --accent-2-soft:#1D3733;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:16px;
+    line-height:1.55;
+    padding-inline:20px;
+  }
+  a{color:inherit;}
+  .wrap{max-width:1120px;margin-inline:auto;}
+  h1,h2,h3{font-family:var(--font-display);font-weight:700;letter-spacing:-0.01em;text-wrap:balance;margin:0;}
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:12px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  .btn{
+    font-family:var(--font-mono);
+    font-size:13px;
+    letter-spacing:.03em;
+    padding:10px 16px;
+    border:1px solid var(--ink);
+    background:transparent;
+    color:var(--ink);
+    cursor:pointer;
+    border-radius:var(--radius);
+    transition:background .15s, color .15s;
+  }
+  .btn:hover{background:var(--ink);color:var(--paper);}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);}
+  .btn.primary:hover{filter:brightness(1.08);}
+  .btn[aria-pressed="true"]{background:var(--ink);color:var(--paper);}
+
+  /* header */
+  header{
+    position:sticky;top:env(safe-area-inset-top,0px);
+    z-index:20;
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding-block:16px;gap:16px;
+  }
+  .logo{
+    display:flex;align-items:baseline;gap:8px;
+    font-family:var(--font-display);font-size:20px;font-weight:800;
+  }
+  .logo .dot{color:var(--accent);}
+  nav.links{display:flex;gap:22px;font-size:14px;}
+  nav.links a{text-decoration:none;border-bottom:2px solid transparent;padding-bottom:3px;}
+  nav.links a:hover{border-color:var(--accent);}
+  .theme-toggle{
+    font-family:var(--font-mono);font-size:12px;
+    border:1px solid var(--line);background:none;color:var(--ink-soft);
+    padding:6px 10px;border-radius:var(--radius);cursor:pointer;
+  }
+  .navmenu-btn{display:none;}
+
+  /* hero */
+  .hero{
+    padding-block:64px 40px;
+    display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:end;
+  }
+  .hero h1{font-size:clamp(2.2rem,5vw,3.6rem);line-height:1.02;}
+  .hero h1 em{font-style:normal;color:var(--accent);}
+  .hero p.lede{font-size:18px;color:var(--ink-soft);max-width:46ch;margin-top:18px;}
+  .hero-actions{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap;}
+  .swatchboard{
+    border:1px solid var(--line);
+    background:var(--paper-2);
+    padding:16px;
+    border-radius:var(--radius);
+  }
+  .swatchboard .cap{font-family:var(--font-mono);font-size:11px;color:var(--ink-soft);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;}
+  .chip{
+    font-family:var(--font-mono);font-size:12px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    padding:6px 10px;border-radius:20px;
+    display:flex;align-items:center;gap:6px;
+  }
+  .chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--swatch,var(--accent-2));}
+
+  section{padding-block:56px;border-top:1px solid var(--line);}
+  .section-head{
+    display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;
+    margin-bottom:28px;
+  }
+  .section-head h2{font-size:clamp(1.6rem,3vw,2.2rem);}
+  .section-head p{color:var(--ink-soft);max-width:48ch;margin-top:8px;font-size:15px;}
+
+  /* filters */
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px;align-items:center;}
+  .filters select{
+    font-family:var(--font-mono);font-size:13px;
+    border:1px solid var(--ink);background:var(--paper);color:var(--ink);
+    padding:9px 12px;border-radius:var(--radius);
+  }
+
+  /* design grid */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  .card{
+    border:1px solid var(--line);
+    background:var(--paper-2);
+    border-radius:var(--radius);
+    overflow:hidden;
+    display:flex;flex-direction:column;
+  }
+  .art{
+    aspect-ratio:4/3;
+    position:relative;
+    display:flex;align-items:center;justify-content:center;
+    border-bottom:1px solid var(--line);
+    overflow:hidden;
+  }
+  .art svg{width:72%;height:72%;}
+  .art .reg{
+    position:absolute;top:8px;left:8px;
+    font-family:var(--font-mono);font-size:10px;color:var(--ink-soft);
+    background:color-mix(in srgb, var(--paper) 75%, transparent);
+    padding:2px 6px;border-radius:10px;
+  }
+  .card-body{padding:16px 16px 18px;display:flex;flex-direction:column;gap:10px;flex:1;}
+  .card-body h3{font-size:17px;}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;}
+  .tag{font-family:var(--font-mono);font-size:11px;color:var(--ink-soft);border:1px solid var(--line);padding:2px 8px;border-radius:20px;}
+  .price-row{
+    margin-top:auto;
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:var(--font-mono);font-size:13px;
+  }
+  .price-row .from{color:var(--ink-soft);}
+  .price-row .amount{font-size:16px;}
+  .compare-toggle{
+    width:100%;text-align:left;
+    background:none;border:none;border-top:1px dashed var(--line);
+    padding:12px 16px;margin-top:6px;
+    font-family:var(--font-mono);font-size:12px;letter-spacing:.03em;
+    color:var(--accent-2);cursor:pointer;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .spec{
+    display:none;
+    border-top:1px solid var(--line);
+    padding:4px 16px 16px;
+  }
+  .spec.open{display:block;}
+  .spec table{width:100%;border-collapse:collapse;font-family:var(--font-mono);font-size:12.5px;}
+  .spec th{text-align:left;font-weight:500;color:var(--ink-soft);padding:8px 4px;border-bottom:1px solid var(--line);font-size:11px;text-transform:uppercase;letter-spacing:.05em;}
+  .spec td{padding:8px 4px;border-bottom:1px solid var(--line);}
+  .spec tr:last-child td{border-bottom:none;}
+  .spec a{color:var(--accent-2);text-decoration:none;}
+  .spec a:hover{text-decoration:underline;}
+  .spec-note{font-size:11px;color:var(--ink-soft);margin-top:10px;}
+
+  /* magazin */
+  .mag-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  .mag-card{
+    border:1px solid var(--line);padding:18px;border-radius:var(--radius);
+    background:var(--paper-2);display:flex;flex-direction:column;gap:10px;min-height:180px;
+  }
+  .mag-card .meta{font-family:var(--font-mono);font-size:11px;color:var(--ink-soft);display:flex;justify-content:space-between;}
+  .mag-card h3{font-size:16px;line-height:1.3;}
+  .mag-card p{font-size:13.5px;color:var(--ink-soft);margin:0;}
+
+  /* deals */
+  .deal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .deal-card{
+    border:1px solid var(--line);background:var(--paper-2);border-radius:var(--radius);
+    padding:16px;display:flex;flex-direction:column;gap:10px;
+  }
+  .deal-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+  .deal-shop{font-family:var(--font-mono);font-size:11px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;}
+  .deal-badge{
+    font-family:var(--font-mono);font-size:12px;font-weight:600;
+    background:var(--accent);color:var(--accent-ink);
+    padding:3px 9px;border-radius:20px;white-space:nowrap;
+  }
+  .deal-card h3{font-size:15.5px;line-height:1.3;}
+  .deal-foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;}
+  .deal-meta{font-family:var(--font-mono);font-size:11px;color:var(--ink-soft);}
+  .vote-btn{
+    all:unset;cursor:pointer;display:flex;align-items:center;gap:6px;
+    font-family:var(--font-mono);font-size:12.5px;
+    border:1px solid var(--line);border-radius:20px;padding:5px 10px;
+    transition:background .15s,border-color .15s,color .15s;
+  }
+  .vote-btn:hover{border-color:var(--accent-2);color:var(--accent-2);}
+  .vote-btn.voted{background:var(--accent-2-soft);border-color:var(--accent-2);color:var(--accent-2);}
+  .trend{display:inline-flex;align-items:center;gap:3px;font-family:var(--font-mono);font-size:11px;}
+  .trend.down{color:var(--accent-2);}
+  .trend.up{color:var(--accent);}
+
+  /* featured shop strip */
+  .featured{
+    border:1px solid var(--accent-2);
+    background:var(--accent-2-soft);
+    border-radius:var(--radius);
+    padding:18px 20px;
+    display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;
+  }
+  .featured .cap{font-family:var(--font-mono);font-size:11px;color:var(--accent-2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px;}
+  .featured h3{font-size:19px;}
+  .featured p{font-size:14px;color:var(--ink-soft);margin:4px 0 0;max-width:52ch;}
+  .featured .btn{border-color:var(--accent-2);color:var(--accent-2);}
+  .featured .btn:hover{background:var(--accent-2);color:var(--paper);}
+
+  /* community */
+  .community{display:grid;grid-template-columns:1.1fr .9fr;gap:32px;}
+  .poll{border:1px solid var(--line);background:var(--paper-2);padding:20px;border-radius:var(--radius);}
+  .poll .cap{font-family:var(--font-mono);font-size:11px;color:var(--ink-soft);letter-spacing:.08em;text-transform:uppercase;}
+  .poll h3{font-size:18px;margin-top:6px;}
+  .poll-option{margin-top:14px;}
+  .poll-option button{
+    all:unset;cursor:pointer;display:block;width:100%;
+    border:1px solid var(--line);border-radius:var(--radius);padding:10px 12px;
+    position:relative;overflow:hidden;
+  }
+  .poll-option .fill{
+    position:absolute;inset:0;background:var(--accent-2-soft);
+    width:var(--pct,0%);transition:width .5s ease;z-index:0;
+  }
+  .poll-option .label{position:relative;z-index:1;display:flex;justify-content:space-between;font-size:13.5px;}
+  .poll-option .label b{font-family:var(--font-mono);font-weight:500;}
+  .poll-foot{font-size:11.5px;color:var(--ink-soft);margin-top:12px;font-family:var(--font-mono);}
+  .side-note{display:flex;flex-direction:column;gap:18px;}
+  .note-card{border:1px solid var(--line);padding:18px;border-radius:var(--radius);}
+  .note-card .eyebrow{margin-bottom:8px;}
+  .note-card p{font-size:14px;color:var(--ink-soft);margin:0;}
+
+  /* newsletter / footer */
+  .subscribe{
+    display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+    border:1px solid var(--line);background:var(--paper-2);
+    padding:20px;border-radius:var(--radius);
+  }
+  .subscribe input{
+    flex:1;min-width:200px;
+    font-family:var(--font-body);font-size:14px;
+    padding:11px 12px;border:1px solid var(--line);border-radius:var(--radius);
+    background:var(--paper);color:var(--ink);
+  }
+  footer{border-top:1px solid var(--line);padding-block:32px 40px;}
+  .foot-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-size:13px;color:var(--ink-soft);}
+  .foot-links{display:flex;gap:16px;flex-wrap:wrap;}
+  .foot-links a{text-decoration:none;}
+  .foot-links a:hover{color:var(--ink);}
+
+  @media (max-width:860px){
+    .hero{grid-template-columns:1fr;gap:28px;padding-block:40px 28px;}
+    .grid, .mag-grid{grid-template-columns:repeat(2,1fr);}
+    .community{grid-template-columns:1fr;}
+    nav.links{display:none;}
+  }
+  @media (max-width:520px){
+    .grid, .mag-grid{grid-template-columns:1fr;}
+    .nav{flex-wrap:wrap;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="logo">Drop<span class="dot">Radar</span></div>
+    <nav class="links">
+      <a href="#rabatte">Rabatte</a>
+      <a href="#finder">Preisvergleich</a>
+      <a href="#magazin">Magazin</a>
+      <a href="#community">Community</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" type="button">Modus: System</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero" style="border-top:none;padding-top:56px;">
+    <div>
+      <p class="eyebrow">Preisvergleich & Rabatt-Radar für Mode</p>
+      <h1>Bevor du kaufst:<br><em>Preise vergleichen.</em></h1>
+      <p class="lede">DropRadar verfolgt Rabatte, Preise und neue Drops über Mode- und Print-on-Demand-Shops hinweg — wie ein Preisvergleich, aber für Fashion. Dazu: Trend-Notizen zu Kollektionen namhafter Marken und eine Community, die Rabattcodes teilt statt nur zu kaufen.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#rabatte">Aktuelle Rabatte</a>
+        <a class="btn" href="#finder">Preise vergleichen</a>
+      </div>
+    </div>
+    <div class="swatchboard">
+      <div class="cap">Aktuell verbunden</div>
+      <div class="chips" id="shopChips">
+        <span class="chip" style="--swatch:#FF4B2E">Redbubble</span>
+        <span class="chip" style="--swatch:#1F6F68">TeePublic</span>
+        <span class="chip" style="--swatch:#8E5CD9">Shirtee</span>
+        <span class="chip" style="--swatch:#D9A441">Seedshirt</span>
+        <span class="chip" style="--swatch:#2F7FD1">Threadless</span>
+        <span class="chip" style="--swatch:#C24A75">Spreadshop</span>
+        <span class="chip" style="--swatch:#3D9970">Bonfire</span>
+        <span class="chip" style="--swatch:#B85C2E">Shirtlabor</span>
+        <span class="chip" style="--swatch:#555">Amazon</span>
+      </div>
+    </div>
+  </section>
+
+  <section style="border-top:none;padding-block:0 40px;">
+    <div class="featured">
+      <div>
+        <div class="cap">Featured Shop</div>
+        <h3>DesignArtLab — Grafik-Shirts, Hoodies &amp; Wandkunst</h3>
+        <p>Der Shop hinter DropRadar. Neun Plattformen, ein Preisvergleich — direkt im Design-Finder weiter unten.</p>
+      </div>
+      <a class="btn" href="#finder">Shop ansehen →</a>
+    </div>
+  </section>
+
+  <section id="rabatte" style="border-top:none;">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Live-Board · Beispieldaten</p>
+        <h2>Aktuelle Rabatte über alle Plattformen</h2>
+        <p>Von der Community gemeldet und hochgevotet — wie bei mydealz, aber für Mode: Print-on-Demand-Shops, dazu perspektivisch auch bekannte Fashion-Marken. Zieht auch Schnäppchenjäger an, die sich sonst nie für Grafik-Shirts interessiert hätten.</p>
+      </div>
+      <a class="btn" href="#community">Rabatt melden</a>
+    </div>
+    <div class="deal-grid" id="dealGrid"></div>
+  </section>
+
+  <section id="finder">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Design-Finder · DesignArtLab</p>
+        <h2>Ein Motiv, alle Bezugsquellen</h2>
+        <p>Jede Karte öffnet ein Preisblatt wie beim Preisvergleich — Plattform, Produktart, Preis, Versand. Beispielwerte zur Veranschaulichung, keine Live-Preise.</p>
+      </div>
+      <div class="filters" id="filters">
+        <button class="btn" data-cat="alle" aria-pressed="true">Alle</button>
+        <button class="btn" data-cat="fantasy">Fantasy &amp; Natur</button>
+        <button class="btn" data-cat="tiere">Tiere</button>
+        <button class="btn" data-cat="sport">Sport</button>
+        <select id="typeFilter">
+          <option value="alle">Alle Produktarten</option>
+          <option value="shirt">T-Shirt</option>
+          <option value="hoodie">Hoodie</option>
+          <option value="poster">Poster</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid" id="designGrid"></div>
+  </section>
+
+  <section id="magazin">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Magazin · jeden Freitag</p>
+        <h2>Feldnotizen aus dem Lab</h2>
+        <p>Kurze, regelmäßige Beiträge statt täglicher Flut — Entstehungsgeschichten, Trends, saisonale Empfehlungen.</p>
+      </div>
+      <a class="btn" href="#">Alle Notizen</a>
+    </div>
+    <div class="mag-grid">
+      <article class="mag-card">
+        <div class="meta"><span>Entstehung</span><span>4 Min.</span></div>
+        <h3>Vom Skizzenbuch zum Hoodie: „Bonsai Tree Island" in fünf Schritten</h3>
+        <p>Wie aus einer Bleistiftskizze eine druckfertige Vektorgrafik für neun Plattformen wird.</p>
+      </article>
+      <article class="mag-card">
+        <div class="meta"><span>Trend-Check</span><span>3 Min.</span></div>
+        <h3>Herbstpalette 2026: Warum gedecktes Rostorange gerade überall auftaucht</h3>
+        <p>Ein Blick auf Farbtrends in Streetwear-Grafik — und was das für neue Motive bedeutet.</p>
+      </article>
+      <article class="mag-card">
+        <div class="meta"><span>Hinter den Kulissen</span><span>5 Min.</span></div>
+        <h3>Warum „1st World Champion" auf drei Plattformen drei verschiedene Preise hat</h3>
+        <p>Ein Vergleich der Marge, Versandkosten und Produktionszeit je Anbieter.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="community">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Community</p>
+        <h2>Rabatte teilen statt nur kaufen</h2>
+        <p>Nach dem Vorbild von mydealz: Wer einen Code oder eine Aktion findet, postet sie — die Community stimmt hoch, was wirklich etwas bringt.</p>
+      </div>
+    </div>
+    <div class="community">
+      <div class="poll">
+        <div class="cap">Neu einreichen</div>
+        <h3>Hast du gerade einen Rabatt gesehen?</h3>
+        <p style="font-size:14px;color:var(--ink-soft);margin:10px 0 16px;">Plattform, Rabatt und Code in drei Feldern melden — landet direkt oben im Rabatte-Board zur Abstimmung.</p>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <input type="text" placeholder="Plattform (z. B. Redbubble)" style="font-family:var(--font-body);font-size:14px;padding:10px 12px;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);color:var(--ink);">
+          <input type="text" placeholder="Rabatt (z. B. -20% auf Poster)" style="font-family:var(--font-body);font-size:14px;padding:10px 12px;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);color:var(--ink);">
+          <button class="btn primary" type="button" style="align-self:flex-start;">Rabatt melden</button>
+        </div>
+        <div class="poll-foot">Ohne Login möglich · Beispiel-Formular, noch nicht verbunden</div>
+      </div>
+      <div class="side-note">
+        <div class="note-card">
+          <p class="eyebrow">Start ohne eigenes Forum</p>
+          <p>Rabatt-Meldungen direkt im Board plus ein verlinkter Discord-Server für tiefere Gespräche — kein eigener Forum-Aufbau nötig, bis sich echter Bedarf zeigt.</p>
+        </div>
+        <div class="note-card">
+          <p class="eyebrow">Kein Spam-Versprechen</p>
+          <p>Beteiligung statt Benachrichtigungsflut: ein „Neu"-Punkt statt Push, Karma-Punkte statt Pflicht-Login.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="footer" style="padding-bottom:0;">
+    <div class="subscribe">
+      <div>
+        <p class="eyebrow" style="margin-bottom:4px;">Freitags-Digest</p>
+        <div style="font-size:14px;color:var(--ink-soft);">Die besten Rabatte der Woche plus 3 neue Motive, einmal pro Woche.</div>
+      </div>
+      <input type="email" id="newsletterEmail" placeholder="deine@email.de" aria-label="E-Mail für den Freitags-Digest">
+      <button class="btn primary" type="button" id="subscribeBtn">Anmelden</button>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-row">
+    <span>DropRadar · Konzept-Vorschau, September 2026</span>
+    <div class="foot-links">
+      <a href="#">Instagram</a>
+      <a href="#">TikTok</a>
+      <a href="#">YouTube</a>
+      <a href="#">Pinterest</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // Inhalte kommen aus data/designs.json und data/deals.json —
+  // dort kannst du Designs, Preise und Rabatte pflegen, ohne dieses HTML anzufassen.
+  // Funktioniert nur über einen echten Server (Cloudflare Pages, Netlify, ...),
+  // nicht beim direkten Öffnen der Datei im Browser (file://).
+
+  function dealCard(d, idx){
+    var el = document.createElement('article');
+    el.className = 'deal-card';
+    el.innerHTML =
+      '<div class="deal-top"><span class="deal-shop">'+d.shop+'</span><span class="deal-badge">'+d.badge+'</span></div>' +
+      '<h3>'+d.title+'</h3>' +
+      '<div class="deal-meta">Code: '+d.code+'</div>' +
+      '<div class="deal-foot">' +
+        '<button class="vote-btn" type="button" data-idx="'+idx+'">▲ <span class="vcount">'+d.votes+'</span></button>' +
+        '<span class="deal-meta">'+d.posted+'</span>' +
+      '</div>';
+    return el;
+  }
+
+  var dealGrid = document.getElementById('dealGrid');
+  dealGrid.addEventListener('click', function(e){
+    var btn = e.target.closest('.vote-btn');
+    if(!btn || btn.classList.contains('voted')) return;
+    var span = btn.querySelector('.vcount');
+    span.textContent = parseInt(span.textContent,10) + 1;
+    btn.classList.add('voted');
+  });
+
+  var grid = document.getElementById('designGrid');
+
+  function blob(colors){
+    return '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Motiv-Platzhalter">' +
+      '<circle cx="38" cy="40" r="26" fill="'+colors[0]+'" opacity="0.85"/>' +
+      '<circle cx="62" cy="55" r="20" fill="'+colors[1]+'" opacity="0.8"/>' +
+      '<circle cx="50" cy="68" r="14" fill="'+colors[2]+'" opacity="0.9"/>' +
+      '</svg>';
+  }
+
+  function renderOffers(offers){
+    var rows = offers.map(function(o){
+      return '<tr><td>'+o.shop+'</td><td>'+o.type+'</td><td>'+o.price+'</td><td>'+o.ship+'</td><td><a href="#">zum Shop →</a></td></tr>';
+    }).join('');
+    return '<table><thead><tr><th>Plattform</th><th>Art</th><th>Preis</th><th>Versand</th><th></th></tr></thead><tbody>'+rows+'</tbody></table><div class="spec-note">Beispielpreise zur Veranschaulichung, keine Live-Daten.</div>';
+  }
+
+  function card(d){
+    var el = document.createElement('article');
+    el.className = 'card';
+    el.dataset.cat = d.cat;
+    el.dataset.types = d.types.join(',');
+    el.innerHTML =
+      '<div class="art" style="background:var(--paper-3)">' +
+        '<span class="reg">Motiv-Platzhalter</span>' +
+        blob(d.swatch) +
+      '</div>' +
+      '<div class="card-body">' +
+        '<h3>'+d.title+'</h3>' +
+        '<div class="tags">' + d.types.map(function(t){
+          var label = t==='shirt'?'T-Shirt':t==='hoodie'?'Hoodie':'Poster';
+          return '<span class="tag">'+label+'</span>';
+        }).join('') + '</div>' +
+        '<div class="price-row"><span class="from">'+d.offers.length+' Plattformen</span><span class="amount">'+d.from+'</span></div>' +
+        '<div class="trend '+d.trendDir+'">'+(d.trendDir==="down"?"↓":"↑")+' '+d.trend+' ggü. Vormonat</div>' +
+      '</div>' +
+      '<button class="compare-toggle" type="button" aria-expanded="false">Preise vergleichen <span>＋</span></button>' +
+      '<div class="spec">'+renderOffers(d.offers)+'</div>';
+
+    var toggle = el.querySelector('.compare-toggle');
+    var spec = el.querySelector('.spec');
+    toggle.addEventListener('click', function(){
+      var open = spec.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true':'false');
+      toggle.innerHTML = open ? 'Preise verbergen <span>－</span>' : 'Preise vergleichen <span>＋</span>';
+    });
+    return el;
+  }
+
+  // filters
+  var currentCat = 'alle';
+  var currentType = 'alle';
+  function applyFilter(){
+    Array.prototype.forEach.call(grid.children, function(el){
+      var catOk = currentCat==='alle' || el.dataset.cat===currentCat;
+      var typeOk = currentType==='alle' || el.dataset.types.indexOf(currentType) > -1;
+      el.style.display = (catOk && typeOk) ? '' : 'none';
+    });
+  }
+  var filterBtns = document.querySelectorAll('#filters button[data-cat]');
+  filterBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      filterBtns.forEach(function(b){ b.setAttribute('aria-pressed','false'); });
+      btn.setAttribute('aria-pressed','true');
+      currentCat = btn.dataset.cat;
+      applyFilter();
+    });
+  });
+  document.getElementById('typeFilter').addEventListener('change', function(e){
+    currentType = e.target.value;
+    applyFilter();
+  });
+
+  // Daten laden und rendern
+  function loadData(url){
+    return fetch(url).then(function(res){
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    });
+  }
+
+  Promise.all([loadData('data/deals.json'), loadData('data/designs.json')])
+    .then(function(results){
+      var deals = results[0];
+      var designs = results[1];
+      deals.forEach(function(d, i){ dealGrid.appendChild(dealCard(d, i)); });
+      designs.forEach(function(d){ grid.appendChild(card(d)); });
+    })
+    .catch(function(err){
+      var msg = '<p style="font-family:var(--font-mono);font-size:13px;color:var(--ink-soft);">' +
+        'Daten konnten nicht geladen werden (' + err.message + '). ' +
+        'Diese Seite braucht einen echten Server (z. B. Cloudflare Pages) — ' +
+        'die Datei direkt im Browser zu öffnen funktioniert nicht.</p>';
+      dealGrid.innerHTML = msg;
+      grid.innerHTML = msg;
+    });
+
+  // theme toggle (cycles system -> light -> dark)
+  var root = document.documentElement;
+  var themeBtn = document.getElementById('themeToggle');
+  var states = ['system','light','dark'];
+  var labels = {system:'Modus: System', light:'Modus: Hell', dark:'Modus: Dunkel'};
+  var idx = 0;
+  themeBtn.addEventListener('click', function(){
+    idx = (idx+1) % states.length;
+    var s = states[idx];
+    if(s==='system'){ root.removeAttribute('data-theme'); }
+    else { root.setAttribute('data-theme', s); }
+    themeBtn.textContent = labels[s];
+  });
+
+  // newsletter demo
+  document.getElementById('subscribeBtn').addEventListener('click', function(){
+    var input = document.getElementById('newsletterEmail');
+    if(input.value && input.value.indexOf('@') > -1){
+      this.textContent = 'Angemeldet ✓';
+      input.disabled = true;
+    } else {
+      input.focus();
+    }
+  });
+
+  // Als App installierbar machen (PWA) – ohne separate App, ohne Store-Review
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("sw.js").catch(function () {});
+    });
+  }
+})();
+</script>
+</body>
+</html>
