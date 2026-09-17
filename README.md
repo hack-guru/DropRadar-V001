@@ -16,21 +16,27 @@ Das ist die erste echte, deploybare Version des Prototyps: eine statische Websit
 5. Alle Dateien aus diesem Ordner (inklusive des `data`-Unterordners) per Drag & Drop dort reinziehen.
 6. Unten „Commit changes" klicken. Fertig – kein Git, kein Terminal nötig.
 
-## Schritt 2: Mit Cloudflare Pages verbinden
+## Schritt 2: Mit GitHub Pages live schalten
 
-1. In Cloudflare einloggen → im Menü **„Workers & Pages"** → **„Create"** → Tab **„Pages"** → **„Connect to Git"**.
-2. Cloudflare fragt nach Zugriff auf GitHub → dort meldest du dich mit deinem eigenen GitHub-Account an und bestätigst per Klick (kein Passwort wird an mich weitergegeben, das läuft direkt zwischen dir, GitHub und Cloudflare).
-3. Dein Repository `dropradar-website` auswählen.
-4. Build-Einstellungen: **Framework preset = „None"**, **Build command = leer lassen**, **Build output directory = `/`** (bzw. „/" stehen lassen).
-5. „Save and Deploy" klicken. Nach ca. 1 Minute ist die Seite unter einer `*.pages.dev`-Adresse live.
+**Update 17.09.2026:** Cloudflare hat sein Dashboard umgebaut – der frühere einfache "Pages"-Weg ("Dateien hochladen, fertig") ist verschwunden, alles läuft jetzt über "Workers" und bräuchte zusätzlich eine technische Konfigurationsdatei. Das ist für eine reine statische Seite unnötig kompliziert geworden. Stattdessen: **GitHub Pages** – direkt in GitHub eingebaut, kein zweiter Account, keine Konfigurationsdatei nötig, macht genau das, was Cloudflare Pages früher gemacht hat.
 
-Jede spätere Änderung, die du auf GitHub hochlädst (z. B. eine bearbeitete `deals.json`), wird automatisch neu deployed.
+1. Im Repository (z. B. `DropRadar-V001`) oben auf **„Settings"** klicken (Zahnrad-Symbol in der Kopfzeile).
+2. In der linken Seitenleiste ganz unten auf **„Pages"** klicken.
+3. Unter „Build and deployment" → „Source": **„Deploy from a branch"** auswählen (meist schon voreingestellt).
+4. Branch: **„main"**, Ordner: **„/ (root)"** → **„Save"** klicken.
+5. Nach ca. 1 Minute steht oben auf dieser Seite die fertige Live-URL, z. B. `https://hack-guru.github.io/DropRadar-V001/`.
+
+Jede spätere Änderung, die du auf GitHub hochlädst oder über das Stift-Symbol bearbeitest, wird automatisch neu deployed – genau wie vorher geplant, nur eben direkt über GitHub statt über Cloudflare.
 
 ## Schritt 3 (später): eigene Domain
 
-1. In Cloudflare Pages beim Projekt → „Custom domains" → „Set up a custom domain".
-2. Domain bei einem Registrar deiner Wahl kaufen (z. B. direkt über Cloudflare Registrar, oder woanders) – das ist der einzige Punkt, an dem wirklich Geld fließt (~10–15 €/Jahr).
-3. DNS-Eintrag laut Cloudflare-Anleitung setzen – bei Domains, die schon über Cloudflare laufen, meist ein Klick.
+1. Domain bei einem Registrar deiner Wahl kaufen (z. B. über Cloudflare Registrar, oder woanders) – das ist der einzige Punkt, an dem wirklich Geld fließt (~10–15 €/Jahr).
+2. Im Repository unter Settings → Pages → „Custom domain" die gekaufte Domain eintragen.
+3. Beim Domain-Anbieter (bzw. bei Cloudflare, falls die Domain dort verwaltet wird) einen CNAME-Eintrag auf `hack-guru.github.io` setzen – GitHub zeigt beim Eintragen der Domain genau an, welcher DNS-Eintrag nötig ist.
+
+Cloudflare kann dabei trotzdem sinnvoll bleiben – einfach nur als DNS-Verwalter/CDN vor der GitHub-Pages-Seite, ganz ohne den komplizierten Workers-Weg von oben.
+
+Die beiden angelegten Cloudflare-Worker-Projekte (`dropradar-website`, `designartlab-website`) brauchen wir nicht mehr – die kannst du einfach stehen lassen oder unter Compute → Workers löschen.
 
 ## Inhalte pflegen (aktuell)
 

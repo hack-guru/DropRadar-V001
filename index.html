@@ -255,6 +255,7 @@
   .trend{display:inline-flex;align-items:center;gap:3px;font-family:var(--font-mono);font-size:11px;}
   .trend.down{color:var(--accent-2);}
   .trend.up{color:var(--accent);}
+  .trend.new{color:var(--ink-soft);}
 
   /* story / warum dropradar */
   .story{max-width:68ch;}
@@ -412,13 +413,14 @@
       <div>
         <p class="eyebrow">Design-Finder · DesignArtLab</p>
         <h2>Ein Motiv, alle Bezugsquellen</h2>
-        <p>Jede Karte öffnet ein Preisblatt wie beim Preisvergleich — Plattform, Produktart, Preis, Versand. Beispielwerte zur Veranschaulichung, keine Live-Preise.</p>
+        <p>Jede Karte öffnet ein Preisblatt wie beim Preisvergleich — Plattform, Produktart, Preis, Versand. Echte Motive, manuell erfasst am 17.09.2026 — noch keine automatische Live-Synchronisierung.</p>
       </div>
       <div class="filters" id="filters">
         <button class="btn" data-cat="alle" aria-pressed="true">Alle</button>
         <button class="btn" data-cat="fantasy">Fantasy &amp; Natur</button>
         <button class="btn" data-cat="tiere">Tiere</button>
         <button class="btn" data-cat="sport">Sport</button>
+        <button class="btn" data-cat="humor">Humor &amp; Sprüche</button>
         <select id="typeFilter">
           <option value="alle">Alle Produktarten</option>
           <option value="shirt">T-Shirt</option>
@@ -561,9 +563,10 @@
 
   function renderOffers(offers){
     var rows = offers.map(function(o){
-      return '<tr><td>'+o.shop+'</td><td>'+o.type+'</td><td>'+o.price+'</td><td>'+o.ship+'</td><td><a href="#">zum Shop →</a></td></tr>';
+      var link = o.url ? '<a href="'+o.url+'" target="_blank" rel="noopener">zum Shop →</a>' : '<a href="#">zum Shop →</a>';
+      return '<tr><td>'+o.shop+'</td><td>'+o.type+'</td><td>'+o.price+'</td><td>'+o.ship+'</td><td>'+link+'</td></tr>';
     }).join('');
-    return '<table><thead><tr><th>Plattform</th><th>Art</th><th>Preis</th><th>Versand</th><th></th></tr></thead><tbody>'+rows+'</tbody></table><div class="spec-note">Beispielpreise zur Veranschaulichung, keine Live-Daten.</div>';
+    return '<table><thead><tr><th>Plattform</th><th>Art</th><th>Preis</th><th>Versand</th><th></th></tr></thead><tbody>'+rows+'</tbody></table><div class="spec-note">Preise wie auf der jeweiligen Plattform angezeigt (Originalwährung, keine Umrechnung), Stand 17.09.2026 — manuell erfasst, noch nicht live-synchronisiert.</div>';
   }
 
   function card(d){
@@ -582,8 +585,8 @@
           var label = t==='shirt'?'T-Shirt':t==='hoodie'?'Hoodie':'Poster';
           return '<span class="tag">'+label+'</span>';
         }).join('') + '</div>' +
-        '<div class="price-row"><span class="from">'+d.offers.length+' Plattformen</span><span class="amount">'+d.from+'</span></div>' +
-        '<div class="trend '+d.trendDir+'">'+(d.trendDir==="down"?"↓":"↑")+' '+d.trend+' ggü. Vormonat</div>' +
+        '<div class="price-row"><span class="from">'+(d.offers.length===1?'1 Plattform':d.offers.length+' Plattformen')+'</span><span class="amount">'+d.from+'</span></div>' +
+        '<div class="trend '+d.trendDir+'">'+(d.trendDir==="new" ? "• Erste Erfassung — Trend folgt" : (d.trendDir==="down"?"↓":"↑")+' '+d.trend+' ggü. Vormonat')+'</div>' +
       '</div>' +
       '<button class="compare-toggle" type="button" aria-expanded="false">Preise vergleichen <span>＋</span></button>' +
       '<div class="spec">'+renderOffers(d.offers)+'</div>';
