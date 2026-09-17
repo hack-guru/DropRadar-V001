@@ -38,6 +38,18 @@ Auf GitHub eine der beiden JSON-Dateien öffnen → Stift-Symbol „Edit this fi
 
 Für eine komfortablere Eingabemaske (statt JSON von Hand) kann später ein kostenloses Headless-CMS (z. B. Decap CMS) ergänzt werden – das ist Phase 2.
 
+## Rechtliches (schon eingebaut, aber noch nicht startklar)
+
+`impressum.html` und `datenschutz.html` liegen bereits im Ordner und sind im Footer von `index.html` verlinkt.
+
+**Bevor die Seite live geht, unbedingt noch erledigen:**
+1. In `impressum.html` steht bei der Adresse `[BITTE HAUSNUMMER ERGÄNZEN]` – die Hausnummer ist gesetzlich Pflichtangabe (ladungsfähige Anschrift), ohne sie ist das Impressum nicht rechtsgültig. Einfach den Platzhalter durch die echte Hausnummer ersetzen (auf GitHub direkt über das Stift-Symbol editierbar).
+2. `datenschutz.html` an der gleichen Stelle (Abschnitt „1. Verantwortlicher") ebenfalls die Hausnummer ergänzen.
+
+Die E-Mail-Adresse im Impressum ist bewusst nicht als Klartext im HTML hinterlegt, sondern wird erst per Klick auf „E-Mail-Adresse anzeigen" per JavaScript zusammengesetzt – das hält einfache Scraper/Bots ab, die nur den rohen Seitentext nach `@`-Adressen durchsuchen. Ein hundertprozentiger Schutz ist damit nicht möglich (ein Impressum muss die Adresse letztlich frei zugänglich machen, das schreibt das Gesetz so vor), aber die große Masse automatisierter Adress-Sammler geht damit leer aus.
+
+Cookie-Banner: aktuell bewusst noch nicht eingebaut, weil die Seite noch keine Cookies/Tracking setzt (steht auch so in der Datenschutzerklärung). Sobald Werbung/Analytics dazukommt, muss vor dem Setzen der Cookies ein Consent-Banner davor.
+
 ## Android-„App" (schon eingebaut)
 
 Die Seite ist bereits eine installierbare PWA (Progressive Web App): `manifest.json`, `sw.js` und die App-Icons (`icon-192.png`, `icon-512.png` – aktuell nur Platzhalter-Monogramm) sind schon drin. Sobald die Seite live ist, kann sie auf Android über Chrome-Menü → „Zum Startbildschirm hinzufügen" wie eine echte App installiert werden: eigenes Icon, kein Browser-Rahmen, läuft im eigenen Fenster. Kostet nichts, braucht keinen Play-Store-Eintrag und keine separate App-Pflege – jede Änderung an der Website erscheint automatisch auch in der „App".
